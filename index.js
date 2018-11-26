@@ -10,7 +10,7 @@ const frontpage   	   = require('./controllers/frontpage');
 addToStaticAsync(glob.sync(`${__dirname}/static/*`));
 // removeFromStatic(glob.sync(`${__dirname}/static/*`));
 router
-	.get('/', frontpage)
+	.get('/', ctx => ctx.body = frontpage(ctx))
 	.get('/__userAgent__', async ctx => ctx.body = ctx.userAgent);
 
 module.exports = function (app) {

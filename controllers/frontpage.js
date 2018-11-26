@@ -16,12 +16,12 @@ if (!__DEV__) {
     styles.push(csso.minify(fs.readFileSync(path.join(__dirname, '../assets/default.css'))).css);
 }
 
-module.exports = async function (ctx) {
+module.exports = function (ctx) {
 	let outdatedbrowser = ctx.userAgent.isIE && (parseInt(ctx.userAgent.version) <= 10);
 	let cacheKey		= ctx.i18n.locale + ctx.userAgent.browser + parseInt(ctx.userAgent.version);
 	let hasPageCache 	= cache.has(cacheKey);
 
-	if (hasPageCache) return ctx.body = cache.get(cacheKey);
+	if (hasPageCache) return cache.get(cacheKey);
 
 	let locals = {
         styles,
@@ -52,5 +52,5 @@ module.exports = async function (ctx) {
 
     cache.set(cacheKey, page);
 
-	ctx.body = page;
+	return page;
 };
