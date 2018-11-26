@@ -1,0 +1,253 @@
+doctype html
+if userAgent.isIE
+    <!--[if lte IE 9]>
+    html.no-js.lte-ie9(lang=''+i18n.locale)
+    <![endif]-->
+    <!--[if lte IE 10]>
+    html.no-js.lte-ie10(lang=''+i18n.locale)
+    <![endif]-->
+    <!--[if !(IE)]><!-->
+html.no-js(lang=''+i18n.locale)
+    if userAgent.isIE
+        <!--<![endif]-->
+    head
+        meta(charset='utf-8')
+        title #{pageTitle}
+
+        if styles
+            each val in styles
+                style
+                    !=val
+
+        if __DEV__
+            style
+                include ../assets/reset.css
+            style
+                include ../assets/default.css
+
+        style.
+            .no-js body > * {
+                display: none !important;
+            }
+
+            .no-js .no-js {
+                display: block !important;
+                background: url('/js.jpg') 0 0 no-repeat;
+                background-size: cover;
+            }
+
+        if favicons
+            each val, index in favicons.html
+                !=val
+        script document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+        meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no, ya-title=fade, ya-dock=fade')
+
+        if userAgent.source.match(/IEMobile\/10\.0/)
+            style
+                | @-ms-viewport{width:auto!important}
+            script.
+                if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+                    var msViewportStyle = document.createElement('style')
+                    msViewportStyle.appendChild(document.createTextNode('@-ms-viewport{width:auto!important}'));
+                    document.querySelector('head').appendChild(msViewportStyle)
+                }
+        if userAgent.isMobile
+            <!--[if IEMobile]>
+            meta(http-equiv='cleartype' content='on')
+            <![endif]-->
+            meta(name='HandheldFriendly' content='True')
+
+        if assets && assets.runtime
+            if assets.runtime.css
+                link(rel='stylesheet' type='text/css' href='' + assets.runtime.css)
+            if assets.runtime.js
+                script(src='' + assets.runtime.js defer)
+        if assets && assets.styles
+            if assets.styles.css
+                link(rel='stylesheet' type='text/css' href='' + assets.styles.css)
+            if assets.styles.js
+                script(src='' + assets.styles.js defer)
+
+        if outdatedbrowser
+            if assets &&  assets.outdatedbrowser
+                if assets.outdatedbrowser.css
+                    link(rel='stylesheet' type='text/css' href='' + assets.outdatedbrowser.css)
+                if assets.outdatedbrowser.js
+                    script(src='' + assets.outdatedbrowser.js defer)
+        else
+            if assets &&  assets.vendor
+                if assets.vendor.css
+                    link(rel='stylesheet' type='text/css' href='' + assets.vendor.css)
+                if assets.vendor.js
+                    script(src='' + assets.vendor.js defer)
+            if assets && assets.common
+                if assets.common.css
+                    link(rel='stylesheet' type='text/css' href='' + assets.common.css)
+                if assets.common.js
+                    script(src='' + assets.common.js defer)
+
+            if assets &&  assets.index
+                if assets.index.css
+                    link(rel='stylesheet' type='text/css' href=''+assets.index.css)
+                if assets.index.js
+                    script(src='' + assets.index.js defer)
+        //- https://masteram.us/servis/meta-tag.php
+
+        if pageTitle
+            meta(name='DC.title' content=''+pageTitle)
+        meta(name='msapplication-tap-highlight' content='no')
+        if homepage
+            meta(name='msapplication-starturl' content=''+homepage)
+        if appName
+            meta(name='application-name' content=''+appName)
+        if appDescription
+            meta(name='msapplication-tooltip' content=''+appDescription)
+            meta(name='description' content=''+appDescription)
+        meta(name='apple-mobile-web-app-capable' content='yes')
+        meta(name='apple-mobile-web-app-status-bar-style' content='black')
+        meta(name='google' content='notranslate')
+        meta(name='theme-color' content='#fff')
+        meta(name='SKYPE_TOOLBAR' content='SKYPE_TOOLBAR_PARSER_COMPATIBLE')
+        meta(name='format-detection' content='telephone=no')
+        meta(name='format-detection' content='address=no')
+        if copyright
+            meta(name='dcterms.rightsHolder' content='© '+copyright)
+            meta(name=''+copyright content='© '+copyright)
+        if !copyright && author
+            //- Метатег Author и Copyright не используются одновременно - https://ru.wikipedia.org/wiki/%D0%9C%D0%B5%D1%82%D0%B0%D1%82%D0%B5%D0%B3%D0%B8#.D0.9C.D0.B5.D1.82.D0.B0.D1.82.D0.B5.D0.B3_Author_.D0.B8_Copyright
+            meta(name='author' content=''+author)
+            meta(name='DC.creator' content=''+author)
+
+        if twitterCard
+            meta(name='twitter:card' content=''+twitterCard)
+        if homepage
+            meta(name='twitter:site' content=''+homepage)
+        if pageTitle
+            meta(name='twitter:title' content=''+pageTitle)
+        if appDescription
+            meta(name='twitter:description' content=''+appDescription)
+        if twitterCreator
+            meta(name='twitter:creator' content=''+twitterCreator)
+        if homepage
+            //- twitter:url For each page url of page
+            meta(name='twitter:url' content=''+homepage)
+            meta(name='twitter:domain' content='' + homepage)
+
+        //- og:image must be 1200x630 TODO
+        meta(property='og:image' content='/assets/img/logo_1200x630.png')
+
+        //- image_src must be 100x100 TODO
+        link(rel='image_src' href='/assets/img/logo_100x100.png')
+
+        //- minimum dimensions of 300x157; max 4096x4096 & 5MB (must be unique for each page, not logo) TODO
+        meta(name='twitter:image' content='/assets/img/logo_1200x630.png')
+
+        if pageTitle
+            meta(property='og:title' content=''+pageTitle)
+        if ogType
+            meta(property='og:type' content=''+ogType)
+        if appDescription
+            meta(property='og:description' content=''+appDescription)
+
+        if homepage
+            meta(property='og:url' content=''+homepage)
+        if appName
+            meta(property='og:site_name' content=''+appName)
+        if fbAdmins
+            meta(property='fb:admins' content=''+fbAdmins)
+
+        if latitude && longitude
+            meta(property='place:location:latitude' content=''+latitude)
+            meta(property='place:location:longitude' content=''+longitude)
+            meta(name='geo.position' content='' + latitude + ';' + longitude)
+            meta(name='ICBM' content='' + latitude + ', ' + longitude)
+        if streetAddress
+            meta(property='business:contact_data:street_address' content=''+streetAddress)
+        if city
+            meta(property='business:contact_data:locality' content=''+city)
+        if postalCode
+            meta(property='business:contact_data:postal_code' content=''+postalCode)
+        if country
+            meta(property='business:contact_data:country_name' content=''+country)
+        if email
+            meta(property='business:contact_data:email' content=''+email)
+        if phoneNumber
+            meta(property='business:contact_data:phone_number' content=''+phoneNumber)
+        if homepage
+            meta(property='business:contact_data:website' content=''+homepage)
+        if placeName
+            meta(name='geo.placename' content=''+placeName)
+        if region
+            meta(name='geo.region' content=''+region)
+
+        style.
+            .preloader {
+                position: fixed;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background-color: rgba(40, 44, 55, 0.75);
+                z-index: 999999;
+            }
+
+            .preloader__text,
+            .preloader__text::after {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+            }
+
+            .preloader__text {
+                position: relative;
+                font-size: 10px;
+                text-indent: -9999em;
+                border-top: 3px solid transparent;
+                border-right: 3px solid transparent;
+                border-bottom: 3px solid #fff;
+                border-left: 3px solid #fff;
+                transform: translateZ(0);
+                animation: spin 1.1s infinite linear;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+
+    body
+        - var nojsLocales = ['EN', 'HR', 'DE', 'NL', 'ES', 'PT', 'IT', 'NO', 'RU', 'FR', 'CZ', 'JA', 'KO', 'HU', 'TH', 'PH', 'TR', 'ID', 'SK', 'PL', 'AR', 'UR'];
+        - var _locale = null
+
+        if i18n._locale
+            each val in nojsLocales
+                if i18n._locale.substring(0, 2).toUpperCase() == val
+                    - _locale = val.toLowerCase()
+        if !_locale
+            each val in nojsLocales
+                if locale && locale.substring(0,2).toUpperCase() == val
+                    - _locale = val.toLowerCase()
+
+        <!--noindex-->
+        //-noscript
+        div.no-js(style="display: none; height: 100%")
+            p(style="color: #fff; font-size: 16px; font-weight: bold; text-align: center; margin: 0; font-family: Helvetica, 'Roboto Light', Tahoma, 'Helvetica CY', 'Nimbus Sans L', sans-serif ")
+                br
+                | #{i18n.__('no-js.IN_YOUR_BROWSER')} <br><br> #{i18n.__('no-js.FOR_WATCHING')} <a href="https://enable-javascript.com/#{_locale || 'en'}" style="text-decoration: underline; color: #fff" title="#{i18n.__('no-js.HOW')}" target="_blank">#{i18n.__('no-js.ON')}</a> JavaScript
+        <!--/noindex-->
+
+        if (outdatedbrowser)
+            include outdatedbrowser
+        else
+            .preloader
+                .preloader__text
+        //-<script id="__bs_script__">//<![CDATA[document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.js?v=2.18.8'><\/script>".replace("HOST", location.hostname));//]]></script>
