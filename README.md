@@ -1,0 +1,1 @@
+# Frontpage module for [Koa.js GEN Server](https://github.com/koalex/koa-gen-server)
