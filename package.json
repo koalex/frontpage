@@ -1,6 +1,6 @@
 {
     "name": "frontpage",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Frontpage module for Koa.js GEN Server.",
     "main": "./index.js",
     "scripts": {
