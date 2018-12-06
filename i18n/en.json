@@ -50,7 +50,7 @@
     "422": "unprocessable entity",
     "423": "locked",
     "424": "failed dependency",
-    "425": "unordered collection",
+    "425": "too early",
     "426": "upgrade required",
     "428": "precondition required",
     "429": "too many requests",
