@@ -5,7 +5,7 @@ const path	= require('path');
 const LRU 	= require('lru-cache');
 const csso 	= require('csso');
 const cache = new LRU({
-    max: 3000,
+    max: 5000,
     length: (n, key) => n * 2 + key.length,
     maxAge: 1000 * 60 * 60 // 1hour
 });
@@ -17,13 +17,14 @@ if (!__DEV__) {
 }
 
 module.exports = function (ctx) {
+	let reqURL			= new URL(ctx.href);
 	let outdatedbrowser = ctx.userAgent.isIE && (parseInt(ctx.userAgent.version) <= 10);
-	let cacheKey		= ctx.i18n.locale + ctx.userAgent.browser + parseInt(ctx.userAgent.version);
+	let cacheKey		= ctx.i18n.locale + ctx.userAgent.browser + parseInt(ctx.userAgent.version) + ctx.href;
 	let hasPageCache 	= cache.has(cacheKey);
 
 	if (hasPageCache) return cache.get(cacheKey);
 
-	let locals = {
+    let locals = {
         styles,
 		outdatedbrowser,
 		pageTitle: ctx.i18n.__('frontpage.PAGE_TITLE'),
@@ -35,7 +36,7 @@ module.exports = function (ctx) {
 		placeName: ctx.i18n.__('frontpage.PLACE_NAME'),
 		region: ctx.i18n.__('frontpage.REGION'), // subdivision code list: https://en.wikipedia.org/wiki/ISO_3166-2
 		author: 'Konstantin Aleksandrov',
-		homepage: 'https://site.com',
+		homepage: reqURL.origin,
 		appName: ctx.i18n.__('frontpage.APP_NAME'),
 		twitterCard: 'summary',
 		twitterCreator: '@your_twitter_account',
