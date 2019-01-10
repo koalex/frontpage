@@ -41,6 +41,11 @@ html.no-js(lang=''+i18n.locale)
                 !=val
         script document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
         meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no, ya-title=fade, ya-dock=fade')
+        //- TODO: https://tech.yandex.ru/browser/tableau/doc/dg/concepts/create-widget-docpage/
+
+        if alternates
+            each val in alternates
+                !=val
 
         if userAgent.source.match(/IEMobile\/10\.0/)
             style
@@ -97,6 +102,7 @@ html.no-js(lang=''+i18n.locale)
             meta(name='DC.title' content=''+pageTitle)
         meta(name='msapplication-tap-highlight' content='no')
         if homepage
+            //- FIXME ctx.href ?
             meta(name='msapplication-starturl' content=''+homepage)
         if appName
             meta(name='application-name' content=''+appName)
@@ -129,6 +135,7 @@ html.no-js(lang=''+i18n.locale)
         if twitterCreator
             meta(name='twitter:creator' content=''+twitterCreator)
         if homepage
+            //- FIXME ctx.href ?
             //- twitter:url For each page url of page
             meta(name='twitter:url' content=''+homepage)
             meta(name='twitter:domain' content='' + homepage)
@@ -150,6 +157,7 @@ html.no-js(lang=''+i18n.locale)
             meta(property='og:description' content=''+appDescription)
 
         if homepage
+            //- FIXME ctx.href ?
             meta(property='og:url' content=''+homepage)
         if appName
             meta(property='og:site_name' content=''+appName)
