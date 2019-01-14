@@ -1,12 +1,12 @@
 'use strict';
 
-const fs 	   = require('fs');
-const path	   = require('path');
-const config   = require('config');
+const fs 	 = require('fs');
+const path	 = require('path');
+const config = require('config');
 const chokidar = require('chokidar');
-const LRU 	   = require('lru-cache');
-const csso 	   = require('csso');
-const cache    = new LRU({
+const LRU 	 = require('lru-cache');
+const csso 	 = require('csso');
+const cache  = new LRU({
     max: 5000,
     length: (n, key) => n * 2 + key.length,
     maxAge: 1000 * 60 * 60 // 1hour
