@@ -67,11 +67,26 @@ html.no-js(lang=''+i18n.locale)
                 link(rel='stylesheet' type='text/css' href='' + assets.runtime.css)
             if assets.runtime.js
                 script(src='' + assets.runtime.js defer)
+
+        if assets && assets.vendor
+            if assets.vendor.css
+                link(rel='stylesheet' type='text/css' href='' + assets.vendor.css)
+            if assets.vendor.js
+                script(src='' + assets.vendor.js defer)
+
         if assets && assets.styles
             if assets.styles.css
                 link(rel='stylesheet' type='text/css' href='' + assets.styles.css)
             if assets.styles.js
                 script(src='' + assets.styles.js defer)
+
+        if assets
+            each val, key in assets
+                if key != 'runtime' && key != 'vendor' && key != 'styles'
+                    if assets[key].css
+                        link(rel='stylesheet' type='text/css' href='' + assets[key].css)
+                    if assets[key].js
+                        script(src='' + assets[key].js defer)
 
         if outdatedbrowser
             if assets &&  assets.outdatedbrowser

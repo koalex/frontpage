@@ -1,16 +1,60 @@
 'use strict';
 
-const fs 	= require('fs');
-const path	= require('path');
-const LRU 	= require('lru-cache');
-const csso 	= require('csso');
-const cache = new LRU({
+const fs 	 = require('fs');
+const path	 = require('path');
+const config = require('config');
+const LRU 	 = require('lru-cache');
+const csso 	 = require('csso');
+const cache  = new LRU({
     max: 5000,
     length: (n, key) => n * 2 + key.length,
     maxAge: 1000 * 60 * 60 // 1hour
 });
-
+let assets, favicons;
 let styles = [];
+let assetsCacheKey = Math.random();
+
+onAssetsChange();
+function onAssetsChange (filePath) {
+    if (!filePath) {
+    	try {
+            assets = JSON.parse(fs.readFileSync(join(config.staticRoot, 'assets.json'),   'utf8'));
+            favicons = JSON.parse(fs.readFileSync(join(config.staticRoot, 'favicons.json'), 'utf8'));
+            assetsCacheKey = Math.random();
+            return;
+		} catch (err) {
+			console.error(err);
+        }
+
+    }
+    if (filePath.endsWith('assets.json')) {
+        assets = JSON.parse(fs.readFileSync(join(config.staticRoot, 'assets.json'),   'utf8'));
+        assetsCacheKey = Math.random();
+    } else if (filePath.endsWith('favicons.json')) {
+        favicons = JSON.parse(fs.readFileSync(join(config.staticRoot, 'favicons.json'), 'utf8'));
+        assetsCacheKey = Math.random();
+    }
+}
+
+const i18nWatcher = chokidar.watch([
+    path.join(config.staticRoot, 'assets.json'),
+    path.join(config.staticRoot, 'favicons.json')
+], {
+    persistent: true
+});
+
+i18nWatcher
+    .on('add', onAssetsChange)
+    .on('change', onAssetsChange);
+
+process
+    .on('SIGINT', () => {
+        i18nWatcher.close();
+    })
+	.on('message', msg => { // windows
+		if ('shutdown' == msg) i18nWatcher.close();
+	});
+
 if (!__DEV__) {
     styles.push(csso.minify(fs.readFileSync(path.join(__dirname, '../assets/reset.css'))).css);
     styles.push(csso.minify(fs.readFileSync(path.join(__dirname, '../assets/default.css'))).css);
@@ -19,7 +63,7 @@ if (!__DEV__) {
 module.exports = function (ctx) {
 	let reqURL			= new URL(ctx.href);
 	let outdatedbrowser = ctx.userAgent.isIE && (parseInt(ctx.userAgent.version) <= 10);
-	let cacheKey		= ctx.i18n.locale + ctx.userAgent.browser + parseInt(ctx.userAgent.version) + ctx.href;
+	let cacheKey		= ctx.i18n.locale + ctx.userAgent.browser + parseInt(ctx.userAgent.version) + ctx.href + assetsCacheKey;
 	let hasPageCache 	= cache.has(cacheKey);
 
 	if (hasPageCache) return cache.get(cacheKey);
