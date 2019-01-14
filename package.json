@@ -50,6 +50,7 @@
         "yarn": "^1.12.3"
     },
     "dependencies": {
+        "chokidar": "^2.0.4",
         "cross-env": "^5.1.4",
         "csso": "^3.5.1",
         "glob": "^7.1.3",
